@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-Pesa / Africa Fintech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body { background-color: #0f172a; color: #e2e8f0; }
+        .hidden { display: none !important; }
+    </style>
+</head>
+<body class="min-h-screen flex items-center justify-center p-4">
+
+    <!-- Login Screen -->
+    <div id="login-screen" class="w-full max-w-md bg-gray-900 p-8 rounded-2xl shadow-2xl border border-gray-800 transition-all duration-500">
+        <div class="text-center mb-8">
+            <h1 class="text-3xl font-black text-emerald-400 mb-2">M-Pesa / Africa Fintech</h1>
+            <p class="text-gray-400">Employer & Investor Demo Access</p>
+        </div>
+        
+        <div class="space-y-4">
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Demo Email</label>
+                <input type="email" id="email" value="admin@demo.com" readonly class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white outline-none focus:border-emerald-500 cursor-not-allowed">
+            </div>
+            <div>
+                <label class="block text-sm font-medium text-gray-400 mb-1">Demo Password</label>
+                <input type="password" id="password" value="password123" readonly class="w-full bg-gray-800 border border-gray-700 rounded-lg px-4 py-2 text-white outline-none focus:border-emerald-500 cursor-not-allowed">
+            </div>
+            
+            <button onclick="handleLogin()" class="w-full mt-6 bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 px-4 rounded-lg transition-colors flex justify-center items-center">
+                <span id="btn-text">Sign In Securely</span>
+                <svg id="spinner" class="animate-spin ml-2 h-5 w-5 text-white hidden" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>
+            </button>
+            <p class="text-xs text-center text-gray-500 mt-4">Credentials are pre-filled for demo purposes.</p>
+        </div>
+    </div>
+
+    <!-- Main Dashboard (Hidden initially) -->
+    <div id="dashboard-screen" class="w-full max-w-6xl mx-auto hidden opacity-0 transition-opacity duration-700">
+        <nav class="flex justify-between items-center py-4 mb-8 border-b border-gray-800">
+            <h1 class="text-2xl font-black text-emerald-400">M-Pesa / Africa Fintech</h1>
+            <div class="flex items-center space-x-4">
+                <span class="text-gray-400 text-sm">admin@demo.com</span>
+                <button onclick="handleLogout()" class="px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg text-sm font-medium transition-colors">Logout</button>
+            </div>
+        </nav>
+        
+        <!-- Dashboard Content -->
+        
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700 col-span-1 md:col-span-2">
+                    <h3 class="text-xl font-bold mb-4 text-emerald-400">Digital Wallet</h3>
+                    <div class="text-4xl font-bold text-white mb-2">R 12,450.00 <span class="text-sm text-gray-400">ZAR</span></div>
+                    <p class="text-gray-400 mb-6">Status: <span class="text-green-400">Active</span> | Account: 0984124412</p>
+                    <div class="flex space-x-4">
+                        <button class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded text-white font-semibold">Send Money</button>
+                        <button class="px-4 py-2 bg-gray-700 hover:bg-gray-600 rounded text-white font-semibold">Top Up</button>
+                    </div>
+                </div>
+                <div class="bg-gray-800 p-6 rounded-xl border border-gray-700">
+                    <h3 class="text-lg font-bold mb-4 text-emerald-400">Quick FX</h3>
+                    <div class="space-y-3">
+                        <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-gray-400">USD/ZAR</span><span class="text-white font-mono">18.45</span></div>
+                        <div class="flex justify-between border-b border-gray-700 pb-2"><span class="text-gray-400">KES/ZAR</span><span class="text-white font-mono">0.14</span></div>
+                        <div class="flex justify-between"><span class="text-gray-400">NGN/ZAR</span><span class="text-white font-mono">0.012</span></div>
+                    </div>
+                </div>
+            </div>
+            <div class="mt-6 bg-gray-800 p-6 rounded-xl border border-gray-700">
+                <h3 class="text-lg font-bold mb-4 text-emerald-400">Recent Transactions</h3>
+                <table class="w-full text-left">
+                    <thead class="text-gray-400 border-b border-gray-700"><tr><th class="pb-2">ID</th><th class="pb-2">Type</th><th class="pb-2">Amount</th><th class="pb-2">Status</th></tr></thead>
+                    <tbody class="text-white">
+                        <tr><td class="py-3">TXN-001</td><td>P2P Transfer</td><td class="text-red-400">-R 500.00</td><td><span class="px-2 py-1 bg-green-900 text-green-300 rounded text-xs">SUCCESS</span></td></tr>
+                        <tr><td class="py-3 border-t border-gray-700">TXN-002</td><td>Deposit</td><td class="text-green-400">+R 2000.00</td><td class="border-t border-gray-700"><span class="px-2 py-1 bg-green-900 text-green-300 rounded text-xs">SUCCESS</span></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        
+    </div>
+
+    <script>
+        function handleLogin() {
+            document.getElementById('btn-text').innerText = 'Authenticating...';
+            document.getElementById('spinner').classList.remove('hidden');
+            
+            // Simulate network request
+            setTimeout(() => {
+                document.getElementById('login-screen').classList.add('hidden');
+                const dashboard = document.getElementById('dashboard-screen');
+                document.body.classList.remove('items-center', 'justify-center');
+                document.body.classList.add('items-start');
+                dashboard.classList.remove('hidden');
+                
+                // Trigger reflow to apply opacity transition
+                void dashboard.offsetWidth; 
+                dashboard.classList.remove('opacity-0');
+            }, 1200);
+        }
+
+        function handleLogout() {
+            document.getElementById('dashboard-screen').classList.add('hidden');
+            document.getElementById('dashboard-screen').classList.add('opacity-0');
+            document.body.classList.remove('items-start');
+            document.body.classList.add('items-center', 'justify-center');
+            
+            document.getElementById('btn-text').innerText = 'Sign In Securely';
+            document.getElementById('spinner').classList.add('hidden');
+            document.getElementById('login-screen').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
