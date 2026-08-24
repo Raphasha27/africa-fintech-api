@@ -37,7 +37,9 @@ async def get_my_wallet(
 ) -> WalletResponse:
     """Return the authenticated user's wallet."""
     result = await db.execute(
-        select(Wallet).where(Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE)
+        select(Wallet).where(
+            Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE
+        )
     )
     wallet = result.scalar_one_or_none()
     if not wallet:
@@ -77,7 +79,9 @@ async def fund_wallet(
         raise HTTPException(status_code=400, detail="Amount must be positive")
 
     result = await db.execute(
-        select(Wallet).where(Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE)
+        select(Wallet).where(
+            Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE
+        )
     )
     wallet = result.scalar_one_or_none()
     if not wallet:

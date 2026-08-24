@@ -49,7 +49,9 @@ async def transfer_money(
         raise HTTPException(status_code=400, detail="Cannot transfer to yourself")
 
     sender_result = await db.execute(
-        select(Wallet).where(Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE)
+        select(Wallet).where(
+            Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE
+        )
     )
     sender_wallet = sender_result.scalar_one_or_none()
     if not sender_wallet:
@@ -59,7 +61,9 @@ async def transfer_money(
         raise HTTPException(status_code=402, detail="Insufficient funds")
 
     receiver_result = await db.execute(
-        select(Wallet).where(Wallet.user_id == request.receiver_id, Wallet.status == WalletStatus.ACTIVE)
+        select(Wallet).where(
+            Wallet.user_id == request.receiver_id, Wallet.status == WalletStatus.ACTIVE
+        )
     )
     receiver_wallet = receiver_result.scalar_one_or_none()
     if not receiver_wallet:
@@ -98,7 +102,9 @@ async def transaction_history(
 ) -> list[TransactionResponse]:
     """Return the transaction history for the authenticated user's wallet."""
     wallet_result = await db.execute(
-        select(Wallet).where(Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE)
+        select(Wallet).where(
+            Wallet.user_id == current_user.id, Wallet.status == WalletStatus.ACTIVE
+        )
     )
     wallet = wallet_result.scalar_one_or_none()
     if not wallet:

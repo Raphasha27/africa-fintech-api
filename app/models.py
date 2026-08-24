@@ -13,7 +13,6 @@ from sqlalchemy import (
     Numeric,
     String,
     Text,
-    create_engine,
 )
 from sqlalchemy.orm import DeclarativeBase, relationship
 
@@ -74,7 +73,9 @@ class Wallet(Base):
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     user = relationship("User", back_populates="wallets")
-    transactions = relationship("Transaction", back_populates="wallet", cascade="all, delete-orphan")
+    transactions = relationship(
+        "Transaction", back_populates="wallet", cascade="all, delete-orphan"
+    )
 
 
 class Transaction(Base):

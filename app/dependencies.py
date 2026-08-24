@@ -11,7 +11,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.config import get_settings
 from app.models import User
-from app.config import Settings
 
 settings = get_settings()
 security = HTTPBearer()
@@ -19,7 +18,7 @@ security = HTTPBearer()
 
 async def get_db() -> AsyncGenerator[AsyncSession, None]:
     """Yield an async database session per request."""
-    from sqlalchemy.ext.asyncio import AsyncSession, create_async_engine, async_sessionmaker
+    from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
     engine = create_async_engine(settings.DATABASE_URL, echo=False)
     async_session = async_sessionmaker(engine, class_=AsyncSession, expire_on_commit=False)
@@ -34,7 +33,9 @@ async def get_db() -> AsyncGenerator[AsyncSession, None]:
 
 def create_access_token(user_id: int, expires_delta: timedelta | None = None) -> str:
     """Create a signed JWT access token."""
-    expire = datetime.utcnow() + (expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES))
+    expire = datetime.utcnow() + (
+        expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
+    )
     payload = {"sub": str(user_id), "exp": expire}
     return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
 
