@@ -1,11 +1,12 @@
+[![CI](https://github.com/Raphasha27/africa-fintech-api/actions/workflows/ci.yml/badge.svg)](https://github.com/Raphasha27/africa-fintech-api/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+
 # Africa Fintech API
 
 Production-Grade Mobile Money API for Africa
 
-[![CI](https://github.com/your-org/africa-fintech-api/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/africa-fintech-api/actions/workflows/ci.yml)
 ![Python](https://img.shields.io/badge/Python-3.12-blue?style=flat-square&logo=python)
 ![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi)
-![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
 
 ## Overview
 
