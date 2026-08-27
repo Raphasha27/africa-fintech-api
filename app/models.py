@@ -14,7 +14,7 @@ from sqlalchemy import (
     String,
     Text,
 )
-from sqlalchemy.orm import DeclarativeBase, relationship
+from sqlalchemy.orm import DeclarativeBase, Mapped, relationship
 
 
 class Base(DeclarativeBase):
@@ -69,7 +69,7 @@ class Wallet(Base):
     user_id = Column(Integer, ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     balance = Column(Numeric(15, 2), default=Decimal("0.00"), nullable=False)
     currency = Column(String(3), default="USD", nullable=False)
-    status = Column(Enum(WalletStatus), default=WalletStatus.ACTIVE, nullable=False)
+    status: Mapped[WalletStatus] = Column(Enum(WalletStatus), default=WalletStatus.ACTIVE, nullable=False)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 
     user = relationship("User", back_populates="wallets")
@@ -85,9 +85,9 @@ class Transaction(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     wallet_id = Column(Integer, ForeignKey("wallets.id", ondelete="CASCADE"), nullable=False)
-    type = Column(Enum(TransactionType), nullable=False)
+    type: Mapped[TransactionType] = Column(Enum(TransactionType), nullable=False)
     amount = Column(Numeric(15, 2), nullable=False)
-    status = Column(Enum(TransactionStatus), default=TransactionStatus.PENDING, nullable=False)
+    status: Mapped[TransactionStatus] = Column(Enum(TransactionStatus), default=TransactionStatus.PENDING, nullable=False)
     reference = Column(Text, nullable=True)
     created_at = Column(DateTime, default=datetime.utcnow, nullable=False)
 

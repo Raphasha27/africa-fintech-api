@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 
 from fastapi import Depends, HTTPException, status
 from fastapi.security import HTTPAuthorizationCredentials, HTTPBearer
-from jose import JWTError, jwt
+from jose import JWTError, jwt  # type: ignore[import-untyped]
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -37,7 +37,7 @@ def create_access_token(user_id: int, expires_delta: timedelta | None = None) ->
         expires_delta or timedelta(minutes=settings.ACCESS_TOKEN_EXPIRE_MINUTES)
     )
     payload = {"sub": str(user_id), "exp": expire}
-    return jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM)
+    return str(jwt.encode(payload, settings.SECRET_KEY, algorithm=settings.JWT_ALGORITHM))
 
 
 async def get_current_user(
