@@ -23,7 +23,7 @@ jobs:
     name: Hadolint
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Run Hadolint
         uses: hadolint/hadolint-action@v3.1.0
         with:
@@ -34,7 +34,7 @@ jobs:
     name: Trivy Vulnerability Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Build Docker image
         run: docker build -t scan-target .
       - name: Run Trivy vulnerability scanner
@@ -54,7 +54,7 @@ jobs:
     name: Trivy Config Scan
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
       - name: Run Trivy config scanner
         uses: aquasecurity/trivy-action@master
         with:
