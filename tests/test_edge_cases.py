@@ -85,7 +85,9 @@ async def test_get_me_with_invalid_token(client: AsyncClient) -> None:
 async def test_get_me_with_expired_token(client: AsyncClient) -> None:
     response = await client.get(
         "/api/v1/auth/me",
-        headers={"Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjAwMDAwMDAwfQ.invalid"},
+        headers={
+            "Authorization": "Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIxIiwiZXhwIjoxNjAwMDAwMDAwfQ.invalid"
+        },
     )
     assert response.status_code == 401
 

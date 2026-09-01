@@ -45,9 +45,18 @@ app = FastAPI(
         "url": "https://opensource.org/licenses/MIT",
     },
     openapi_tags=[
-        {"name": "Authentication", "description": "User registration, login, and profile management"},
-        {"name": "Wallets", "description": "Mobile money wallet operations — create, fund, and query balances"},
-        {"name": "Transactions", "description": "Peer-to-peer money transfers and transaction history"},
+        {
+            "name": "Authentication",
+            "description": "User registration, login, and profile management",
+        },
+        {
+            "name": "Wallets",
+            "description": "Mobile money wallet operations — create, fund, and query balances",
+        },
+        {
+            "name": "Transactions",
+            "description": "Peer-to-peer money transfers and transaction history",
+        },
         {"name": "Health", "description": "Service liveness probes"},
     ],
     lifespan=lifespan,
