@@ -1,0 +1,351 @@
+openapi: 3.0.3
+info:
+  title: Africa Fintech API
+  description: Production-grade mobile money and remittance backend for African fintech markets.
+  version: 2.0.0
+  contact:
+    name: Africa Fintech API Support
+    url: https://github.com/Raphasha27/africa-fintech-api
+  license:
+    name: MIT
+    url: https://opensource.org/licenses/MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development server
+
+tags:
+  - name: Authentication
+    description: User registration, login, and profile management
+  - name: Wallets
+    description: Mobile money wallet operations
+  - name: Transactions
+    description: Peer-to-peer money transfers and transaction history
+  - name: Health
+    description: Service liveness probes
+
+paths:
+  /health:
+    get:
+      tags: [Health]
+      summary: Liveness probe
+      operationId: healthCheck
+      responses:
+        "200":
+          description: Service is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  service:
+                    type: string
+                    example: fintech-api
+
+  /api/v1/auth/register:
+    post:
+      tags: [Authentication]
+      summary: Register a new user
+      description: Register a new user and auto-provision a wallet.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password, full_name]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: secureP@ss123
+                full_name:
+                  type: string
+                  example: Jane Doe
+                phone:
+                  type: string
+                  nullable: true
+                  example: "+254700123456"
+      responses:
+        "201":
+          description: User registered successfully
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "400":
+          description: Email already registered
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/auth/login:
+    post:
+      tags: [Authentication]
+      summary: Authenticate a user
+      description: Authenticate a user and return a JWT token.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [email, password]
+              properties:
+                email:
+                  type: string
+                  format: email
+                  example: user@example.com
+                password:
+                  type: string
+                  format: password
+                  example: secureP@ss123
+      responses:
+        "200":
+          description: Login successful
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TokenResponse"
+        "401":
+          description: Invalid email or password
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ErrorResponse"
+
+  /api/v1/auth/me:
+    get:
+      tags: [Authentication]
+      summary: Get current user profile
+      description: Return the authenticated user's profile.
+      operationId: getMe
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: User profile
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserResponse"
+        "401":
+          description: Not authenticated
+
+  /api/v1/wallets:
+    post:
+      tags: [Wallets]
+      summary: Create a new wallet
+      description: Create a new wallet for the authenticated user.
+      operationId: createWallet
+      security:
+        - BearerAuth: []
+      responses:
+        "201":
+          description: Wallet created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WalletResponse"
+        "400":
+          description: Active wallet already exists
+
+  /api/v1/wallets/me:
+    get:
+      tags: [Wallets]
+      summary: Get my wallet
+      description: Return the authenticated user's active wallet.
+      operationId: getMyWallet
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: Wallet details
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WalletResponse"
+        "404":
+          description: No active wallet found
+
+  /api/v1/wallets/fund:
+    post:
+      tags: [Wallets]
+      summary: Fund wallet (deposit)
+      description: Fund the authenticated user's wallet.
+      operationId: fundWallet
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [amount]
+              properties:
+                amount:
+                  type: number
+                  format: decimal
+                  example: 5000.00
+      responses:
+        "200":
+          description: Wallet funded
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/WalletResponse"
+        "400":
+          description: Amount must be positive
+
+  /api/v1/transactions/transfer:
+    post:
+      tags: [Transactions]
+      summary: Transfer money (P2P)
+      description: Transfer money from the sender's wallet to a receiver's wallet.
+      operationId: transferMoney
+      security:
+        - BearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required: [receiver_id, amount]
+              properties:
+                receiver_id:
+                  type: integer
+                  example: 2
+                amount:
+                  type: number
+                  format: decimal
+                  example: 100.00
+                reference:
+                  type: string
+                  nullable: true
+                  example: "Payment for services"
+      responses:
+        "201":
+          description: Transfer completed
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TransactionResponse"
+        "400":
+          description: Invalid transfer (self-transfer or bad amount)
+        "402":
+          description: Insufficient funds
+
+  /api/v1/transactions/history:
+    get:
+      tags: [Transactions]
+      summary: Transaction history
+      description: Return the transaction history for the authenticated user's wallet.
+      operationId: getTransactionHistory
+      security:
+        - BearerAuth: []
+      responses:
+        "200":
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TransactionResponse"
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    TokenResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          example: eyJhbGciOiJIUzI1NiIs...
+        token_type:
+          type: string
+          example: bearer
+
+    UserResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        email:
+          type: string
+          example: user@example.com
+        full_name:
+          type: string
+          example: Jane Doe
+
+    WalletResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        balance:
+          type: number
+          format: decimal
+          example: 15000.00
+        currency:
+          type: string
+          example: USD
+        status:
+          type: string
+          enum: [ACTIVE, FROZEN, CLOSED]
+          example: ACTIVE
+
+    TransactionResponse:
+      type: object
+      properties:
+        id:
+          type: integer
+          example: 1
+        wallet_id:
+          type: integer
+          example: 1
+        type:
+          type: string
+          enum: [TRANSFER, DEPOSIT, WITHDRAWAL]
+          example: TRANSFER
+        amount:
+          type: number
+          format: decimal
+          example: 100.00
+        status:
+          type: string
+          enum: [PENDING, COMPLETED, FAILED]
+          example: COMPLETED
+        reference:
+          type: string
+          nullable: true
+          example: "TXN-A1B2C3D4E5F6"
+        created_at:
+          type: string
+          example: "2025-01-15 10:30:00"
+
+    ErrorResponse:
+      type: object
+      properties:
+        detail:
+          type: string
+          example: Something went wrong

@@ -25,8 +25,31 @@ async def lifespan(app: FastAPI) -> None:
 
 app = FastAPI(
     title="Africa Fintech API",
-    description="Production-grade mobile money and remittance backend.",
+    description=(
+        "Production-grade mobile money and remittance backend for African fintech markets.\n\n"
+        "## Features\n"
+        "- **Authentication** — Register, login, and JWT-based session management\n"
+        "- **Wallets** — Create, fund, and query mobile money wallets\n"
+        "- **Transactions** — Peer-to-peer transfers with full audit trail\n\n"
+        "## Authentication\n"
+        "All protected endpoints require a JWT Bearer token. Obtain one via `/api/v1/auth/login` "
+        "or `/api/v1/auth/register` and pass it as `Authorization: Bearer <token>`."
+    ),
     version="2.0.0",
+    contact={
+        "name": "Africa Fintech API Support",
+        "url": "https://github.com/Raphasha27/africa-fintech-api",
+    },
+    license_info={
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT",
+    },
+    openapi_tags=[
+        {"name": "Authentication", "description": "User registration, login, and profile management"},
+        {"name": "Wallets", "description": "Mobile money wallet operations — create, fund, and query balances"},
+        {"name": "Transactions", "description": "Peer-to-peer money transfers and transaction history"},
+        {"name": "Health", "description": "Service liveness probes"},
+    ],
     lifespan=lifespan,
 )
 
