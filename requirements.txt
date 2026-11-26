@@ -1,8 +1,8 @@
-fastapi==0.141.1
-uvicorn[standard]==0.53.0
-sqlalchemy[asyncio]==2.0.54
+fastapi==0.165.0
+uvicorn[standard]==0.54.0
+sqlalchemy[asyncio]==2.1.9
 aiosqlite==0.22.1
-pydantic-settings==2.15.0
+pydantic-settings==2.16.3
 python-jose[cryptography]==3.5.0
-passlib[bcrypt]==1.7.4
-python-multipart==0.0.32
+passlib[bcrypt]==1.9.5
+python-multipart==0.0.34
